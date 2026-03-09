@@ -1,8 +1,9 @@
+import sys
+import os
+
+# Ensure the project root is on the path so `app` package can be found
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from app import create_app
 
 app = create_app()
-
-# This is required for Vercel to find the app
-from flask import Flask
-if __name__ == "__main__":
-    app.run()
