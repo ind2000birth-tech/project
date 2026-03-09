@@ -1,0 +1,107 @@
+{% extends 'layout/base.html' %}
+
+{% block extra_css %}
+<style>
+    .skills-track {
+        display: flex;
+        width: calc(250px * 18);
+        /* Adjust based on skills count * 2 for seamless loop */
+        animation: scroll 40s linear infinite;
+    }
+
+    .skills-track:hover {
+        animation-play-state: paused;
+    }
+
+    @keyframes scroll {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(calc(-250px * 9));
+        }
+    }
+
+    .skill-card {
+        width: 230px;
+        flex-shrink: 0;
+        margin: 0 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="max-w-7xl mx-auto px-6 lg:px-12 py-20">
+    <div class="flex flex-col lg:flex-row gap-16 items-center">
+        <div class="lg:w-1/2 space-y-8">
+            <h2 class="text-4xl md:text-5xl font-bold font-outfit">
+                About <span class="text-primary">Me</span>
+            </h2>
+            <div class="space-y-6 text-gray-400 text-lg leading-relaxed">
+                <p>
+                    I'm kathish Sudhakar K. I had been completed B.E (Mechanical engineering) on 2021.
+                </p>
+                <p>
+                    With years of experience as a Machine Operator, I have developed a keen eye for precision and
+                    detail, which I apply to every project I undertake, whether it's designing a complex mechanism or
+                    building a production-ready web application.
+                </p>
+                <p>
+                    I believe in clean architecture, modular design, and robust engineering principles. My goal is to
+                    create scalable, efficient, and beautiful solutions that solve real-world problems.
+                </p>
+            </div>
+        </div>
+        <div class="lg:w-1/2 grid grid-cols-2 gap-6">
+            <div class="glass p-8 rounded-3xl glow-hover text-center">
+                <div class="text-4xl font-bold text-primary mb-2">3+</div>
+                <div class="text-gray-400 text-sm">Years Experience</div>
+            </div>
+            <div class="glass p-8 rounded-3xl glow-hover text-center">
+                <div class="text-4xl font-bold text-secondary mb-2">30+</div>
+                <div class="text-gray-400 text-sm">Projects Completed</div>
+            </div>
+            <div class="glass p-8 rounded-3xl glow-hover text-center">
+                <div class="text-4xl font-bold text-secondary mb-2">20+</div>
+                <div class="text-gray-400 text-sm">Satisfied Clients</div>
+            </div>
+            <div class="glass p-8 rounded-3xl glow-hover text-center">
+                <div class="text-4xl font-bold text-primary mb-2">100%</div>
+                <div class="text-gray-400 text-sm">Design Fidelity</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Infinite Scrolling Skills -->
+<section class="py-20 overflow-hidden bg-dark/30">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 mb-12">
+        <h3 class="text-3xl font-bold font-outfit text-center">My <span class="text-secondary">Skills</span></h3>
+    </div>
+
+    <div class="relative">
+        <div class="skills-track">
+            {% for skill in skills %}
+            <div
+                class="skill-card glass p-6 rounded-2xl glow-hover flex flex-col items-center justify-center space-y-4">
+                <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                    <i class="fa-solid fa-code text-xl"></i>
+                </div>
+                <span class="font-bold text-lg text-white">{{ skill }}</span>
+            </div>
+            {% endfor %}
+            <!-- Duplicate for infinite loop -->
+            {% for skill in skills %}
+            <div
+                class="skill-card glass p-6 rounded-2xl glow-hover flex flex-col items-center justify-center space-y-4">
+                <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                    <i class="fa-solid fa-code text-xl"></i>
+                </div>
+                <span class="font-bold text-lg text-white">{{ skill }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

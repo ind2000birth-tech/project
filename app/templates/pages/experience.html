@@ -1,0 +1,43 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<section class="max-w-7xl mx-auto px-6 lg:px-12 py-20">
+    <div class="mb-16 text-center">
+        <h2 class="text-4xl md:text-5xl font-bold font-outfit mb-4">My <span class="text-primary">Journey</span></h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">A timeline of my professional experience in engineering and
+            development.</p>
+    </div>
+
+    <div
+        class="relative space-y-8 before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-primary/50 before:to-transparent">
+        {% if experiences %}
+        {% for exp in experiences %}
+        <div
+            class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+            <!-- Icon -->
+            <div
+                class="flex items-center justify-center w-10 h-10 rounded-full border border-primary/50 bg-dark text-primary shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+                <i class="fa-solid fa-briefcase text-sm"></i>
+            </div>
+            <!-- Content -->
+            <div
+                class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass p-6 rounded-2xl shadow-xl hover:shadow-primary/5 transition-all glow-hover">
+                <div class="flex items-center justify-between space-x-2 mb-1">
+                    <div class="font-bold text-white text-xl">{{ exp.job_title }}</div>
+                    <time class="font-outfit font-medium text-primary text-sm whitespace-nowrap">{{ exp.duration
+                        }}</time>
+                </div>
+                <div class="text-secondary font-medium mb-3">{{ exp.company }}</div>
+                <div class="text-gray-400 text-sm leading-relaxed">{{ exp.description | replace('\n', '<br>') | safe }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="text-center py-20 glass rounded-3xl">
+            <p class="text-gray-500">No experience records found. Check back later!</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

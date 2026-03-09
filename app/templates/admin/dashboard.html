@@ -1,0 +1,118 @@
+{% extends 'layout/base.html' %}
+
+{% block extra_css %}
+<style>
+    .admin-sidebar {
+        height: calc(100vh - 80px);
+    }
+
+    .nav-active {
+        background: rgba(56, 189, 248, 0.1);
+        border-left: 4px solid #38bdf8;
+        color: #38bdf8;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-6 lg:px-12 py-10">
+    <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Sidebar Navigation -->
+        <aside class="lg:w-1/4 space-y-2 admin-sidebar">
+            <div class="glass p-6 rounded-3xl space-y-2">
+                <a href="{{ url_for('admin_bp.dashboard') }}"
+                    class="flex items-center space-x-4 px-4 py-3 rounded-xl hover:bg-white/5 transition-all {{ 'nav-active' if request.endpoint == 'admin_bp.dashboard' }}">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{{ url_for('admin_bp.experience_list') }}"
+                    class="flex items-center space-x-4 px-4 py-3 rounded-xl hover:bg-white/5 transition-all {{ 'nav-active' if request.endpoint == 'admin_bp.experience_list' }}">
+                    <i class="fa-solid fa-briefcase"></i>
+                    <span>Experience</span>
+                </a>
+                <a href="{{ url_for('admin_bp.project_list') }}"
+                    class="flex items-center space-x-4 px-4 py-3 rounded-xl hover:bg-white/5 transition-all {{ 'nav-active' if request.endpoint == 'admin_bp.project_list' }}">
+                    <i class="fa-solid fa-code"></i>
+                    <span>Projects</span>
+                </a>
+                <a href="{{ url_for('admin_bp.reference_list') }}"
+                    class="flex items-center space-x-4 px-4 py-3 rounded-xl hover:bg-white/5 transition-all {{ 'nav-active' if request.endpoint == 'admin_bp.reference_list' }}">
+                    <i class="fa-solid fa-user-group"></i>
+                    <span>References</span>
+                </a>
+                <a href="{{ url_for('admin_bp.message_list') }}"
+                    class="flex items-center space-x-4 px-4 py-3 rounded-xl hover:bg-white/5 transition-all {{ 'nav-active' if request.endpoint == 'admin_bp.message_list' }}">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>Messages</span>
+                </a>
+                <hr class="border-white/5 my-4">
+                <a href="{{ url_for('admin_bp.logout') }}"
+                    class="flex items-center space-x-4 px-4 py-3 rounded-xl hover:bg-red-500/10 text-red-400 transition-all">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="lg:w-3/4 space-y-8">
+            {% block admin_content %}
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                <!-- Stat Card -->
+                <div class="glass p-8 rounded-3xl border-l-4 border-primary">
+                    <div class="text-sm text-gray-400 mb-1">Total Projects</div>
+                    <div class="text-4xl font-bold font-outfit">{{ project_count }}</div>
+                </div>
+                <div class="glass p-8 rounded-3xl border-l-4 border-secondary">
+                    <div class="text-sm text-gray-400 mb-1">Work Experiences</div>
+                    <div class="text-4xl font-bold font-outfit">{{ experience_count }}</div>
+                </div>
+                <div class="glass p-8 rounded-3xl border-l-4 border-green-500">
+                    <div class="text-sm text-gray-400 mb-1">References</div>
+                    <div class="text-4xl font-bold font-outfit">{{ reference_count }}</div>
+                </div>
+                <div class="glass p-8 rounded-3xl border-l-4 border-yellow-500">
+                    <div class="text-sm text-gray-400 mb-1">Messages</div>
+                    <div class="text-4xl font-bold font-outfit">{{ message_count }}</div>
+                </div>
+            </div>
+
+            <div class="glass p-10 rounded-3xl space-y-6">
+                <h3 class="text-2xl font-bold font-outfit">Welcome back, Admin!</h3>
+                <p class="text-gray-400 leading-relaxed">
+                    Use the sidebar to manage your portfolio content. You can add, edit, or delete projects,
+                    experiences, and reference contacts. You can also view and manage messages received through the
+                    contact form.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                    <a href="{{ url_for('admin_bp.add_project') }}"
+                        class="glass p-6 rounded-2xl flex items-center justify-between hover:bg-white/5 transition-all group">
+                        <div class="flex items-center space-x-4">
+                            <div
+                                class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
+                                <i class="fa-solid fa-plus"></i>
+                            </div>
+                            <span class="font-medium text-gray-300">Add New Project</span>
+                        </div>
+                        <i
+                            class="fa-solid fa-chevron-right text-gray-600 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                    <a href="{{ url_for('admin_bp.add_experience') }}"
+                        class="glass p-6 rounded-2xl flex items-center justify-between hover:bg-white/5 transition-all group">
+                        <div class="flex items-center space-x-4">
+                            <div
+                                class="w-10 h-10 rounded-lg bg-secondary/20 flex items-center justify-center text-secondary">
+                                <i class="fa-solid fa-plus"></i>
+                            </div>
+                            <span class="font-medium text-gray-300">Add New Experience</span>
+                        </div>
+                        <i
+                            class="fa-solid fa-chevron-right text-gray-600 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+            </div>
+            {% endblock %}
+        </main>
+    </div>
+</div>
+{% endblock %}

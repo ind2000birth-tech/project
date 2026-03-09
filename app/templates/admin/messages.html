@@ -1,0 +1,42 @@
+{% extends 'admin/dashboard.html' %}
+
+{% block admin_content %}
+<div class="space-y-8">
+    <h3 class="text-3xl font-bold font-outfit">Contact <span class="text-yellow-500">Messages</span></h3>
+
+    <div class="space-y-4">
+        {% if messages %}
+        {% for msg in messages %}
+        <div class="glass p-8 rounded-3xl border border-white/5 space-y-4 hover:bg-white/5 transition-all">
+            <div class="flex justify-between items-start">
+                <div class="flex items-center space-x-4">
+                    <div
+                        class="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-500 font-bold text-xl">
+                        {{ msg.name[0] | upper }}
+                    </div>
+                    <div>
+                        <div class="font-bold text-lg">{{ msg.name }}</div>
+                        <div class="text-gray-500 text-sm">{{ msg.email }}</div>
+                    </div>
+                </div>
+                <div class="text-xs text-gray-600">{{ msg.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+            </div>
+            <div class="text-gray-400 leading-relaxed bg-white/5 p-6 rounded-2xl italic">
+                "{{ msg.message }}"
+            </div>
+            <div class="flex justify-end">
+                <a href="{{ url_for('admin_bp.delete_message', id=msg.id) }}" onclick="return confirm('Are you sure?')"
+                    class="px-6 py-2 bg-red-500/10 text-red-400 rounded-xl text-sm font-bold hover:bg-red-500 hover:text-white transition-all">
+                    Delete Message
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="text-center py-20 glass rounded-3xl">
+            <p class="text-gray-500">No messages yet. Keep promoting your portfolio!</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

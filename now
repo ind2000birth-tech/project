@@ -1,0 +1,9 @@
+Key	Value (Example)
+SECRET_KEY	your-random-secret-key
+DATABASE_URL	postgresql://user:pass@host:port/dbname
+MAIL_SERVER	smtp.gmail.com
+MAIL_PORT	587
+MAIL_USERNAME	your-email@gmail.com
+MAIL_PASSWORD	your-app-password
+ADMIN_USERNAME	admin
+ADMIN_PASSWORD	admin123

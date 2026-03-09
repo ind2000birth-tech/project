@@ -1,0 +1,129 @@
+{% extends 'admin/dashboard.html' %}
+
+{% block admin_content %}
+<div class="space-y-8">
+    <div class="flex justify-between items-center">
+        <h3 class="text-3xl font-bold font-outfit">Reference <span class="text-green-500">Contacts</span></h3>
+        <button onclick="toggleModal('add-ref-modal')"
+            class="px-6 py-3 bg-green-500 text-dark font-bold rounded-xl hover:bg-white transition-all">
+            Add Reference
+        </button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for ref in references %}
+        <div class="glass p-6 rounded-3xl border border-white/5 space-y-4">
+            <div class="flex items-center space-x-4">
+                <div
+                    class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 font-bold text-xl">
+                    {{ ref.name[0] | upper }}
+                </div>
+                <div>
+                    <div class="font-bold">{{ ref.name }}</div>
+                    <div class="text-blue-400 text-xs font-medium">{{ ref.job_role or 'No Role' }}</div>
+                </div>
+            </div>
+            <div class="space-y-2 text-sm text-gray-400">
+                <div class="flex items-center gap-2"><i class="fa-solid fa-envelope w-4"></i> {{ ref.email }}</div>
+                <div class="flex items-center gap-2"><i class="fa-solid fa-phone w-4"></i> {{ ref.phone }}</div>
+            </div>
+            <div class="pt-4 flex gap-2">
+                <button onclick="editRef({{ ref.to_dict() | tojson | safe }})"
+                    class="flex-grow py-2 bg-white/5 rounded-lg text-xs font-bold hover:bg-green-500 hover:text-dark transition-all">Edit</button>
+                <a href="{{ url_for('admin_bp.delete_reference', id=ref.id) }}"
+                    onclick="return confirm('Are you sure?')"
+                    class="px-4 py-2 bg-white/5 rounded-lg text-xs font-bold hover:bg-red-500 hover:text-white transition-all text-red-400">
+                    <i class="fa-solid fa-trash"></i>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Add Reference Modal -->
+<div id="add-ref-modal"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-dark/80 backdrop-blur-sm p-6">
+    <div class="glass p-10 rounded-3xl w-full max-w-md border-white/10 animate-fade-in-up">
+        <div class="flex justify-between items-center mb-8">
+            <h4 class="text-2xl font-bold font-outfit">Add Reference</h4>
+            <button onclick="toggleModal('add-ref-modal')" class="text-gray-500 hover:text-white"><i
+                    class="fa-solid fa-xmark text-2xl"></i></button>
+        </div>
+        <form action="{{ url_for('admin_bp.add_reference') }}" method="POST" class="space-y-6">
+            <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-400">Name</label>
+                <input type="text" name="name" required
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-green-500 text-white">
+            </div>
+            <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-400">Email</label>
+                <input type="email" name="email" required
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-green-500 text-white">
+            </div>
+            <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-400">Job Role</label>
+                <input type="text" name="job_role"
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-green-500 text-white">
+            </div>
+            <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-400">Phone</label>
+                <input type="text" name="phone" required
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-green-500 text-white">
+            </div>
+            <button type="submit" class="w-full py-4 bg-green-500 text-dark font-bold rounded-xl">Save
+                Reference</button>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Reference Modal -->
+<div id="edit-ref-modal"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-dark/80 backdrop-blur-sm p-6">
+    <div class="glass p-10 rounded-3xl w-full max-w-md border-white/10">
+        <div class="flex justify-between items-center mb-8">
+            <h4 class="text-2xl font-bold font-outfit">Edit Reference</h4>
+            <button onclick="toggleModal('edit-ref-modal')" class="text-gray-500 hover:text-white"><i
+                    class="fa-solid fa-xmark text-2xl"></i></button>
+        </div>
+        <form id="edit-ref-form" method="POST" class="space-y-6">
+            <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-400">Name</label>
+                <input type="text" id="edit-ref-name" name="name" required
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-green-500 text-white">
+            </div>
+            <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-400">Email</label>
+                <input type="email" id="edit-ref-email" name="email" required
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-green-500 text-white">
+            </div>
+            <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-400">Job Role</label>
+                <input type="text" id="edit-ref-job-role" name="job_role"
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-green-500 text-white">
+            </div>
+            <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-400">Phone</label>
+                <input type="text" id="edit-ref-phone" name="phone" required
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-green-500 text-white">
+            </div>
+            <button type="submit" class="w-full py-4 bg-primary text-dark font-bold rounded-xl">Update
+                Reference</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleModal(id) {
+        document.getElementById(id).classList.toggle('hidden');
+    }
+    function editRef(ref) {
+        document.getElementById('edit-ref-name').value = ref.name;
+        document.getElementById('edit-ref-job-role').value = ref.job_role || '';
+        document.getElementById('edit-ref-email').value = ref.email;
+        document.getElementById('edit-ref-phone').value = ref.phone;
+        document.getElementById('edit-ref-form').action = `/admin/references/edit/${ref.id}`;
+        toggleModal('edit-ref-modal');
+    }
+</script>
+{% endblock %}

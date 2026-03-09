@@ -1,0 +1,39 @@
+<footer class="border-t border-white/10 mt-20 py-12 bg-dark/50">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+        <div class="flex flex-col md:flex-row justify-between items-center space-y-8 md:space-y-0">
+            <div class="flex flex-col items-center md:items-start space-y-4">
+                <a href="/"
+                    class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                    Kathish
+                </a>
+                <p class="text-gray-400 text-sm max-w-xs text-center md:text-left">
+                    Kathish Sudhakar portfolio showcasing Mechanical Engineering, Web Design, and Machine Operation skills.
+                </p>
+            </div>
+
+            <div class="flex space-x-6">
+                <a href="https://github.com/Kathish2000"
+                    class="w-10 h-10 rounded-full glass flex items-center justify-center hover:text-primary hover:border-primary transition-all">
+                    <i class="fa-brands fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/kathish-sudhakar-031539392?"
+                    class="w-10 h-10 rounded-full glass flex items-center justify-center hover:text-primary hover:border-primary transition-all">
+                    <i class="fa-brands fa-linkedin"></i>
+                </a>
+                <a href="#"
+                    class="w-10 h-10 rounded-full glass flex items-center justify-center hover:text-primary hover:border-primary transition-all">
+                    <i class="fa-brands fa-twitter"></i>
+                </a>
+            </div>
+        </div>
+
+        <div
+            class="mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+            <p>&copy; 2026 Kathish Portfolio. All rights reserved.</p>
+            <div class="flex space-x-6 mt-4 md:mt-0">
+                <a href="{{ url_for('admin_bp.login') }}" class="hover:text-primary">Admin Access</a>
+                <a href="#" class="hover:text-primary">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+</footer>

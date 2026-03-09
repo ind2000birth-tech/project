@@ -1,0 +1,135 @@
+{% extends 'admin/dashboard.html' %}
+
+{% block admin_content %}
+<div class="space-y-8">
+    <div class="flex justify-between items-center">
+        <h3 class="text-3xl font-bold font-outfit">Manage <span class="text-primary">Experience</span></h3>
+        <button onclick="toggleModal('add-experience-modal')"
+            class="px-6 py-3 bg-primary text-dark font-bold rounded-xl hover:bg-white transition-all">
+            Add New
+        </button>
+    </div>
+
+    <div class="glass rounded-3xl overflow-hidden border border-white/5">
+        <table class="w-full text-left">
+            <thead class="bg-white/5 text-gray-400 text-sm">
+                <tr>
+                    <th class="px-6 py-4 font-medium">Job Title</th>
+                    <th class="px-6 py-4 font-medium">Company</th>
+                    <th class="px-6 py-4 font-medium">Duration</th>
+                    <th class="px-6 py-4 font-medium text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+                {% for exp in experiences %}
+                <tr class="hover:bg-white/5 transition-colors">
+                    <td class="px-6 py-4 font-medium">{{ exp.job_title }}</td>
+                    <td class="px-6 py-4 text-gray-400">{{ exp.company }}</td>
+                    <td class="px-6 py-4 text-gray-400 text-sm whitespace-nowrap">{{ exp.duration }}</td>
+                    <td class="px-6 py-4 text-right space-x-2">
+                        <button onclick="editExp({{ exp.to_dict() | tojson | safe }})"
+                            class="text-secondary hover:text-white transition-colors">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <a href="{{ url_for('admin_bp.delete_experience', id=exp.id) }}"
+                            class="text-red-500 hover:text-white transition-colors"
+                            onclick="return confirm('Are you sure?')">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Modal -->
+<div id="add-experience-modal"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-dark/80 backdrop-blur-sm p-6">
+    <div class="glass p-10 rounded-3xl w-full max-w-2xl border-white/10 animate-fade-in-up">
+        <div class="flex justify-between items-center mb-8">
+            <h4 class="text-2xl font-bold font-outfit">Add Experience</h4>
+            <button onclick="toggleModal('add-experience-modal')" class="text-gray-500 hover:text-white"><i
+                    class="fa-solid fa-xmark text-2xl"></i></button>
+        </div>
+        <form action="{{ url_for('admin_bp.add_experience') }}" method="POST" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-400">Job Title</label>
+                    <input type="text" name="job_title" required
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary text-white">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-400">Company</label>
+                    <input type="text" name="company" required
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary text-white">
+                </div>
+            </div>
+            <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-400">Duration (e.g. June 2021 - Present)</label>
+                <input type="text" name="duration" required
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary text-white">
+            </div>
+            <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-400">Description</label>
+                <textarea name="description" rows="5" required
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary text-white resize-none"></textarea>
+            </div>
+            <button type="submit" class="w-full py-4 bg-primary text-dark font-bold rounded-xl">Save Experience</button>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div id="edit-experience-modal"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-dark/80 backdrop-blur-sm p-6">
+    <div class="glass p-10 rounded-3xl w-full max-w-2xl border-white/10">
+        <div class="flex justify-between items-center mb-8">
+            <h4 class="text-2xl font-bold font-outfit">Edit Experience</h4>
+            <button onclick="toggleModal('edit-experience-modal')" class="text-gray-500 hover:text-white"><i
+                    class="fa-solid fa-xmark text-2xl"></i></button>
+        </div>
+        <form id="edit-exp-form" method="POST" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-400">Job Title</label>
+                    <input type="text" id="edit-job-title" name="job_title" required
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary text-white">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-400">Company</label>
+                    <input type="text" id="edit-company" name="company" required
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary text-white">
+                </div>
+            </div>
+            <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-400">Duration</label>
+                <input type="text" id="edit-duration" name="duration" required
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary text-white">
+            </div>
+            <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-400">Description</label>
+                <textarea id="edit-description" name="description" rows="5" required
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary text-white resize-none"></textarea>
+            </div>
+            <button type="submit" class="w-full py-4 bg-secondary text-dark font-bold rounded-xl">Update
+                Experience</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleModal(id) {
+        document.getElementById(id).classList.toggle('hidden');
+    }
+    function editExp(exp) {
+        document.getElementById('edit-job-title').value = exp.job_title;
+        document.getElementById('edit-company').value = exp.company;
+        document.getElementById('edit-duration').value = exp.duration;
+        document.getElementById('edit-description').value = exp.description;
+        document.getElementById('edit-exp-form').action = `/admin/experience/edit/${exp.id}`;
+        toggleModal('edit-experience-modal');
+    }
+</script>
+{% endblock %}

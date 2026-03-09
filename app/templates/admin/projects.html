@@ -1,0 +1,134 @@
+{% extends 'admin/dashboard.html' %}
+
+{% block admin_content %}
+<div class="space-y-8">
+    <div class="flex justify-between items-center">
+        <h3 class="text-3xl font-bold font-outfit">Manage <span class="text-secondary">Projects</span></h3>
+        <button onclick="toggleModal('add-project-modal')"
+            class="px-6 py-3 bg-secondary text-dark font-bold rounded-xl hover:bg-white transition-all">
+            Add Project
+        </button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {% for project in projects %}
+        <div class="glass p-6 rounded-3xl border border-white/5 flex gap-6">
+            <div class="w-24 h-24 rounded-2xl overflow-hidden bg-white/5 shrink-0">
+                <img src="{{ project.image_url if project.image_url else 'https://via.placeholder.com/100' }}"
+                    class="w-full h-full object-cover">
+            </div>
+            <div class="flex-grow min-w-0">
+                <h4 class="text-xl font-bold truncate">{{ project.title }}</h4>
+                <p class="text-gray-400 text-sm truncate mb-4">{{ project.description }}</p>
+                <div class="flex space-x-3">
+                    <button onclick="editProj({{ project.to_dict() | tojson | safe }})"
+                        class="px-4 py-2 bg-white/5 rounded-lg text-xs font-bold hover:bg-secondary hover:text-dark transition-all">Edit</button>
+                    <a href="{{ url_for('admin_bp.delete_project', id=project.id) }}"
+                        onclick="return confirm('Are you sure?')"
+                        class="px-4 py-2 bg-white/5 rounded-lg text-xs font-bold hover:bg-red-500 hover:text-white transition-all text-red-400">Delete</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Add Project Modal -->
+<div id="add-project-modal"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-dark/80 backdrop-blur-sm p-6">
+    <div class="glass p-10 rounded-3xl w-full max-w-2xl border-white/10 animate-fade-in-up">
+        <div class="flex justify-between items-center mb-8">
+            <h4 class="text-2xl font-bold font-outfit">Add Project</h4>
+            <button onclick="toggleModal('add-project-modal')" class="text-gray-500 hover:text-white"><i
+                    class="fa-solid fa-xmark text-2xl"></i></button>
+        </div>
+        <form action="{{ url_for('admin_bp.add_project') }}" method="POST" class="space-y-6">
+            <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-400">Project Title</label>
+                <input type="text" name="title" required
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-secondary text-white">
+            </div>
+            <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-400">Description</label>
+                <textarea name="description" rows="3" required
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-secondary text-white resize-none"></textarea>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-400">GitHub Link</label>
+                    <input type="url" name="github_link"
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-secondary text-white">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-400">Live Demo Link</label>
+                    <input type="url" name="live_demo_link"
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-secondary text-white">
+                </div>
+            </div>
+            <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-400">Image URL</label>
+                <input type="text" name="image_url" placeholder="e.g. /static/images/projects/p1.jpg"
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-secondary text-white">
+            </div>
+            <button type="submit" class="w-full py-4 bg-secondary text-dark font-bold rounded-xl">Save Project</button>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Project Modal -->
+<div id="edit-project-modal"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-dark/80 backdrop-blur-sm p-6">
+    <div class="glass p-10 rounded-3xl w-full max-w-2xl border-white/10">
+        <div class="flex justify-between items-center mb-8">
+            <h4 class="text-2xl font-bold font-outfit">Edit Project</h4>
+            <button onclick="toggleModal('edit-project-modal')" class="text-gray-500 hover:text-white"><i
+                    class="fa-solid fa-xmark text-2xl"></i></button>
+        </div>
+        <form id="edit-proj-form" method="POST" class="space-y-6">
+            <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-400">Project Title</label>
+                <input type="text" id="edit-proj-title" name="title" required
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-secondary text-white">
+            </div>
+            <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-400">Description</label>
+                <textarea id="edit-proj-desc" name="description" rows="3" required
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-secondary text-white resize-none"></textarea>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-400">GitHub Link</label>
+                    <input type="url" id="edit-proj-github" name="github_link"
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-secondary text-white">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-400">Live Demo Link</label>
+                    <input type="url" id="edit-proj-live" name="live_demo_link"
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-secondary text-white">
+                </div>
+            </div>
+            <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-400">Image URL</label>
+                <input type="text" id="edit-proj-image" name="image_url"
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-secondary text-white">
+            </div>
+            <button type="submit" class="w-full py-4 bg-primary text-dark font-bold rounded-xl">Update Project</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleModal(id) {
+        document.getElementById(id).classList.toggle('hidden');
+    }
+    function editProj(proj) {
+        document.getElementById('edit-proj-title').value = proj.title;
+        document.getElementById('edit-proj-desc').value = proj.description;
+        document.getElementById('edit-proj-github').value = proj.github_link;
+        document.getElementById('edit-proj-live').value = proj.live_demo_link;
+        document.getElementById('edit-proj-image').value = proj.image_url;
+        document.getElementById('edit-proj-form').action = `/admin/projects/edit/${proj.id}`;
+        toggleModal('edit-project-modal');
+    }
+</script>
+{% endblock %}
