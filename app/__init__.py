@@ -23,5 +23,13 @@ def create_app(config_class=Config):
     app.register_blueprint(project_bp)
     app.register_blueprint(contact_bp)
     app.register_blueprint(admin_bp)
+
+    # Auto-create tables and seed admin user on first startup (critical for Vercel)
+    with app.app_context():
+        db.create_all()
+        from app.services.auth_service import AuthService
+        admin_user = app.config.get('ADMIN_USERNAME', 'admin')
+        admin_pass = app.config.get('ADMIN_PASSWORD', 'admin123')
+        AuthService.create_initial_admin(admin_user, admin_pass)
     
     return app

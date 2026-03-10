@@ -4,7 +4,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
-    SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')
+    SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key-change-in-prod')
+
+    # Session cookie settings – required for login to persist on Vercel (HTTPS)
+    SESSION_COOKIE_SECURE = True       # Only send cookie over HTTPS
+    SESSION_COOKIE_SAMESITE = 'Lax'   # Protect against CSRF while allowing normal navigation
+    SESSION_COOKIE_HTTPONLY = True     # Prevent JS access to cookie
     
     db_url = os.getenv('DATABASE_URL', '')
     if db_url.startswith("postgres://"):
