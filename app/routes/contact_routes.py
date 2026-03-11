@@ -17,13 +17,13 @@ def contact():
             flash('All fields are required!', 'danger')
         else:
             new_contact = Contact(name=name, email=email, message=message)
-            DatabaseService.add_item(new_contact)
-            
-            # Send email notification
-            EmailService.send_contact_email(name, email, message)
-            
-            flash('Your message has been sent successfully!', 'success')
-            return redirect(url_for('contact_bp.contact'))
+            if DatabaseService.add_item(new_contact):
+                # Send email notification
+                EmailService.send_contact_email(name, email, message)
+                flash('Your message has been sent successfully!', 'success')
+                return redirect(url_for('contact_bp.contact'))
+            else:
+                flash('An error occurred while saving your message. Please try again.', 'danger')
             
     return render_template('pages/contact.html')
 

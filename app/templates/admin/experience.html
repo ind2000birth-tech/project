@@ -27,8 +27,8 @@
                     <td class="px-6 py-4 text-gray-400">{{ exp.company }}</td>
                     <td class="px-6 py-4 text-gray-400 text-sm whitespace-nowrap">{{ exp.duration }}</td>
                     <td class="px-6 py-4 text-right space-x-2">
-                        <button onclick="editExp({{ exp.to_dict() | tojson | safe }})"
-                            class="text-secondary hover:text-white transition-colors">
+                        <button class="edit-btn text-secondary hover:text-white transition-colors"
+                            data-exp='{{ exp.to_dict() | tojson | safe }}'>
                             <i class="fa-solid fa-pen-to-square"></i>
                         </button>
                         <a href="{{ url_for('admin_bp.delete_experience', id=exp.id) }}"
@@ -123,15 +123,19 @@
     function toggleModal(id) {
         document.getElementById(id).classList.toggle('hidden');
     }
-    function editExp(exp) {
-        document.getElementById('edit-job-title').value = exp.job_title;
-        document.getElementById('edit-company').value = exp.company;
-        document.getElementById('edit-duration').value = exp.duration;
-        document.getElementById('edit-description').value = exp.description;
 
-        let url = "{{ url_for('admin_bp.edit_experience', id=0) }}";
-        document.getElementById('edit-exp-form').action = url.replace('0', exp.id);
-        toggleModal('edit-experience-modal');
-    }
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const exp = JSON.parse(this.getAttribute('data-exp'));
+            document.getElementById('edit-job-title').value = exp.job_title;
+            document.getElementById('edit-company').value = exp.company;
+            document.getElementById('edit-duration').value = exp.duration;
+            document.getElementById('edit-description').value = exp.description;
+
+            let url = "{{ url_for('admin_bp.edit_experience', id=0) }}";
+            document.getElementById('edit-exp-form').action = url.replace('0', exp.id);
+            toggleModal('edit-experience-modal');
+        });
+    });
 </script>
 {% endblock %}

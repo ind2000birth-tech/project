@@ -28,8 +28,9 @@
                 <div class="flex items-center gap-2"><i class="fa-solid fa-phone w-4"></i> {{ ref.phone }}</div>
             </div>
             <div class="pt-4 flex gap-2">
-                <button onclick="editRef({{ ref.to_dict() | tojson | safe }})"
-                    class="flex-grow py-2 bg-white/5 rounded-lg text-xs font-bold hover:bg-green-500 hover:text-dark transition-all">Edit</button>
+                <button
+                    class="edit-btn flex-grow py-2 bg-white/5 rounded-lg text-xs font-bold hover:bg-green-500 hover:text-dark transition-all"
+                    data-ref='{{ ref.to_dict() | tojson | safe }}'>Edit</button>
                 <a href="{{ url_for('admin_bp.delete_reference', id=ref.id) }}"
                     onclick="return confirm('Are you sure?')"
                     class="px-4 py-2 bg-white/5 rounded-lg text-xs font-bold hover:bg-red-500 hover:text-white transition-all text-red-400">
@@ -117,15 +118,19 @@
     function toggleModal(id) {
         document.getElementById(id).classList.toggle('hidden');
     }
-    function editRef(ref) {
-        document.getElementById('edit-ref-name').value = ref.name;
-        document.getElementById('edit-ref-job-role').value = ref.job_role || '';
-        document.getElementById('edit-ref-email').value = ref.email;
-        document.getElementById('edit-ref-phone').value = ref.phone;
 
-        let url = "{{ url_for('admin_bp.edit_reference', id=0) }}";
-        document.getElementById('edit-ref-form').action = url.replace('0', ref.id);
-        toggleModal('edit-ref-modal');
-    }
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const ref = JSON.parse(this.getAttribute('data-ref'));
+            document.getElementById('edit-ref-name').value = ref.name;
+            document.getElementById('edit-ref-job-role').value = ref.job_role || '';
+            document.getElementById('edit-ref-email').value = ref.email;
+            document.getElementById('edit-ref-phone').value = ref.phone;
+
+            let url = "{{ url_for('admin_bp.edit_reference', id=0) }}";
+            document.getElementById('edit-ref-form').action = url.replace('0', ref.id);
+            toggleModal('edit-ref-modal');
+        });
+    });
 </script>
 {% endblock %}

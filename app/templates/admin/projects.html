@@ -21,8 +21,9 @@
                 <h4 class="text-xl font-bold truncate">{{ project.title }}</h4>
                 <p class="text-gray-400 text-sm truncate mb-4">{{ project.description }}</p>
                 <div class="flex space-x-3">
-                    <button onclick="editProj({{ project.to_dict() | tojson | safe }})"
-                        class="px-4 py-2 bg-white/5 rounded-lg text-xs font-bold hover:bg-secondary hover:text-dark transition-all">Edit</button>
+                    <button
+                        class="edit-btn px-4 py-2 bg-white/5 rounded-lg text-xs font-bold hover:bg-secondary hover:text-dark transition-all"
+                        data-proj='{{ project.to_dict() | tojson | safe }}'>Edit</button>
                     <a href="{{ url_for('admin_bp.delete_project', id=project.id) }}"
                         onclick="return confirm('Are you sure?')"
                         class="px-4 py-2 bg-white/5 rounded-lg text-xs font-bold hover:bg-red-500 hover:text-white transition-all text-red-400">Delete</a>
@@ -121,16 +122,20 @@
     function toggleModal(id) {
         document.getElementById(id).classList.toggle('hidden');
     }
-    function editProj(proj) {
-        document.getElementById('edit-proj-title').value = proj.title;
-        document.getElementById('edit-proj-desc').value = proj.description;
-        document.getElementById('edit-proj-github').value = proj.github_link;
-        document.getElementById('edit-proj-live').value = proj.live_demo_link;
-        document.getElementById('edit-proj-image').value = proj.image_url;
 
-        let url = "{{ url_for('admin_bp.edit_project', id=0) }}";
-        document.getElementById('edit-proj-form').action = url.replace('0', proj.id);
-        toggleModal('edit-project-modal');
-    }
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const proj = JSON.parse(this.getAttribute('data-proj'));
+            document.getElementById('edit-proj-title').value = proj.title;
+            document.getElementById('edit-proj-desc').value = proj.description;
+            document.getElementById('edit-proj-github').value = proj.github_link;
+            document.getElementById('edit-proj-live').value = proj.live_demo_link;
+            document.getElementById('edit-proj-image').value = proj.image_url;
+
+            let url = "{{ url_for('admin_bp.edit_project', id=0) }}";
+            document.getElementById('edit-proj-form').action = url.replace('0', proj.id);
+            toggleModal('edit-project-modal');
+        });
+    });
 </script>
 {% endblock %}
