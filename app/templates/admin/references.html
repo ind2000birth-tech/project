@@ -122,7 +122,9 @@
         document.getElementById('edit-ref-job-role').value = ref.job_role || '';
         document.getElementById('edit-ref-email').value = ref.email;
         document.getElementById('edit-ref-phone').value = ref.phone;
-        document.getElementById('edit-ref-form').action = `/admin/references/edit/${ref.id}`;
+
+        let url = "{{ url_for('admin_bp.edit_reference', id=0) }}";
+        document.getElementById('edit-ref-form').action = url.replace('0', ref.id);
         toggleModal('edit-ref-modal');
     }
 </script>

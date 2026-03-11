@@ -75,7 +75,7 @@ def edit_experience(id):
     exp.company = request.form.get('company')
     exp.duration = request.form.get('duration')
     exp.description = request.form.get('description')
-    DatabaseService.update_item()
+    DatabaseService.update_item(exp)
     flash('Experience updated successfully', 'success')
     return redirect(url_for('admin_bp.experience_list'))
 
@@ -118,7 +118,7 @@ def edit_project(id):
     proj.github_link = request.form.get('github_link')
     proj.live_demo_link = request.form.get('live_demo_link')
     proj.image_url = request.form.get('image_url')
-    DatabaseService.update_item()
+    DatabaseService.update_item(proj)
     flash('Project updated successfully', 'success')
     return redirect(url_for('admin_bp.project_list'))
 
@@ -158,7 +158,7 @@ def edit_reference(id):
     ref.job_role = request.form.get('job_role')
     ref.email = request.form.get('email')
     ref.phone = request.form.get('phone')
-    DatabaseService.update_item()
+    DatabaseService.update_item(ref)
     flash('Reference updated successfully', 'success')
     return redirect(url_for('admin_bp.reference_list'))
 

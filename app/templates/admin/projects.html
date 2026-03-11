@@ -127,7 +127,9 @@
         document.getElementById('edit-proj-github').value = proj.github_link;
         document.getElementById('edit-proj-live').value = proj.live_demo_link;
         document.getElementById('edit-proj-image').value = proj.image_url;
-        document.getElementById('edit-proj-form').action = `/admin/projects/edit/${proj.id}`;
+
+        let url = "{{ url_for('admin_bp.edit_project', id=0) }}";
+        document.getElementById('edit-proj-form').action = url.replace('0', proj.id);
         toggleModal('edit-project-modal');
     }
 </script>

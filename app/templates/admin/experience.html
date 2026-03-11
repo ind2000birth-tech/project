@@ -128,7 +128,9 @@
         document.getElementById('edit-company').value = exp.company;
         document.getElementById('edit-duration').value = exp.duration;
         document.getElementById('edit-description').value = exp.description;
-        document.getElementById('edit-exp-form').action = `/admin/experience/edit/${exp.id}`;
+
+        let url = "{{ url_for('admin_bp.edit_experience', id=0) }}";
+        document.getElementById('edit-exp-form').action = url.replace('0', exp.id);
         toggleModal('edit-experience-modal');
     }
 </script>

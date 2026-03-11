@@ -7,7 +7,9 @@ class DatabaseService:
         db.session.commit()
 
     @staticmethod
-    def update_item():
+    def update_item(item=None):
+        if item:
+            db.session.add(item)
         db.session.commit()
 
     @staticmethod
